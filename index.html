@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A60 Timer</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <h1 class="title">A60 Timer</h1>
+      <p class="subtitle">Randomized interval countdown timer</p>
+    </header>
+
+    <main class="card">
+      <div class="timer-display-wrap">
+        <div id="status-label" class="status-label">Ready</div>
+        <div id="timer-display" class="timer-display">00:00</div>
+        <div id="cycle-info" class="cycle-info">Cycle: 0 | Set range below and press Start</div>
+      </div>
+
+      <div class="controls-panel">
+        <div class="slider-group">
+          <div class="slider-header">
+            <label for="min-slider">Minimum Time</label>
+            <span id="min-display" class="time-badge">01:00</span>
+          </div>
+          <input type="range" id="min-slider" min="1" max="1800" value="60" step="1">
+          <div class="slider-hints">
+            <span>1s</span>
+            <span>30m</span>
+          </div>
+        </div>
+
+        <div class="slider-group">
+          <div class="slider-header">
+            <label for="max-slider">Maximum Time</label>
+            <span id="max-display" class="time-badge">05:00</span>
+          </div>
+          <input type="range" id="max-slider" min="1" max="1800" value="300" step="1">
+          <div class="slider-hints">
+            <span>1s</span>
+            <span>30m</span>
+          </div>
+        </div>
+
+        <div class="slider-group volume-group">
+          <div class="slider-header">
+            <label for="volume-slider">Alarm Volume</label>
+            <span id="volume-display" class="time-badge">100%</span>
+          </div>
+          <input type="range" id="volume-slider" min="0" max="100" value="100" step="1">
+        </div>
+      </div>
+
+      <div class="button-row">
+        <button id="start-btn" class="btn btn-primary">Start</button>
+        <button id="pause-btn" class="btn btn-secondary" disabled>Pause</button>
+        <button id="reset-btn" class="btn btn-outline" disabled>Reset</button>
+        <button id="test-audio-btn" class="btn btn-ghost">Test Alarm</button>
+      </div>
+
+      <div class="history-panel">
+        <div class="history-header">
+          <span>Recent Cycles</span>
+          <button id="clear-history-btn" class="btn-link">Clear</button>
+        </div>
+        <ul id="history-list" class="history-list">
+          <li class="history-empty">No completed timers yet</li>
+        </ul>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <span>Runs in background tabs. Title bar reflects remaining time.</span>
+    </footer>
+  </div>
+
+  <audio id="alarm-audio" src="Alarmm.m4a" preload="auto"></audio>
+  <script src="app.js"></script>
+</body>
+</html>
