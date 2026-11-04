@@ -10,70 +10,151 @@
   <div class="container">
     <header class="header">
       <h1 class="title">A60 Timer</h1>
-      <p class="subtitle">Randomized interval countdown timer</p>
+      <p class="subtitle">Randomized interval countdown timer and probability roller</p>
     </header>
 
-    <main class="card">
-      <div class="timer-display-wrap">
-        <div id="status-label" class="status-label">Ready</div>
-        <div id="timer-display" class="timer-display">00:00</div>
-        <div id="cycle-info" class="cycle-info">Cycle: 0 | Set range below and press Start</div>
-      </div>
+    <div class="cards-grid">
+      <!-- TIMER CARD -->
+      <section class="card" aria-label="Timer Section">
+        <h2 class="card-title">A60 Countdown Timer</h2>
+        <div class="timer-display-wrap">
+          <div id="status-label" class="status-label">Ready</div>
+          <div id="timer-display" class="timer-display">00:00</div>
+          <div id="cycle-info" class="cycle-info">Cycle: 0 | Set range below and press Start</div>
+        </div>
 
-      <div class="controls-panel">
-        <div class="slider-group">
-          <div class="slider-header">
-            <label for="min-slider">Minimum Time</label>
-            <span id="min-display" class="time-badge">01:00</span>
+        <div class="controls-panel">
+          <div class="slider-group">
+            <div class="slider-header">
+              <label for="min-slider">Minimum Time</label>
+              <span id="min-display" class="time-badge">01:00</span>
+            </div>
+            <input type="range" id="min-slider" min="1" max="1800" value="60" step="1">
+            <div class="slider-hints">
+              <span>1s</span>
+              <span>30m</span>
+            </div>
           </div>
-          <input type="range" id="min-slider" min="1" max="1800" value="60" step="1">
-          <div class="slider-hints">
-            <span>1s</span>
-            <span>30m</span>
+
+          <div class="slider-group">
+            <div class="slider-header">
+              <label for="max-slider">Maximum Time</label>
+              <span id="max-display" class="time-badge">05:00</span>
+            </div>
+            <input type="range" id="max-slider" min="1" max="1800" value="300" step="1">
+            <div class="slider-hints">
+              <span>1s</span>
+              <span>30m</span>
+            </div>
+          </div>
+
+          <div class="slider-group volume-group">
+            <div class="slider-header">
+              <label for="volume-slider">Alarm Volume</label>
+              <span id="volume-display" class="time-badge">100%</span>
+            </div>
+            <input type="range" id="volume-slider" min="0" max="100" value="100" step="1">
           </div>
         </div>
 
-        <div class="slider-group">
-          <div class="slider-header">
-            <label for="max-slider">Maximum Time</label>
-            <span id="max-display" class="time-badge">05:00</span>
+        <div class="button-row">
+          <button id="start-btn" class="btn btn-primary">Start</button>
+          <button id="pause-btn" class="btn btn-secondary" disabled>Pause</button>
+          <button id="reset-btn" class="btn btn-outline" disabled>Reset</button>
+          <button id="test-audio-btn" class="btn btn-ghost">Test Alarm</button>
+        </div>
+
+        <div class="history-panel">
+          <div class="history-header">
+            <span>Recent Timer Cycles</span>
+            <button id="clear-history-btn" class="btn-link">Clear</button>
           </div>
-          <input type="range" id="max-slider" min="1" max="1800" value="300" step="1">
-          <div class="slider-hints">
-            <span>1s</span>
-            <span>30m</span>
+          <ul id="history-list" class="history-list">
+            <li class="history-empty">No completed timers yet</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ROLLER CARD -->
+      <section class="card" aria-label="Roller Section">
+        <h2 class="card-title">1-100 Item Roller</h2>
+
+        <div class="roller-display-wrap">
+          <div id="roller-status" class="status-label">Inactive</div>
+          <div class="roll-number-container">
+            <span class="roll-label">Current Roll</span>
+            <div id="roll-number-display" class="roller-number">--</div>
+          </div>
+
+          <div id="roller-result-card" class="roller-result-card hidden">
+            <div class="result-img-wrapper">
+              <img id="result-image" src="" alt="Roller item result">
+            </div>
+            <div class="result-info">
+              <span class="result-hit-badge">100 HIT</span>
+              <div id="result-name" class="result-name">None</div>
+            </div>
           </div>
         </div>
 
-        <div class="slider-group volume-group">
-          <div class="slider-header">
-            <label for="volume-slider">Alarm Volume</label>
-            <span id="volume-display" class="time-badge">100%</span>
+        <div class="controls-panel">
+          <div class="slider-group">
+            <div class="slider-header">
+              <label for="speed-slider">Rolling Speed</label>
+              <span id="speed-display" class="time-badge">1.0s</span>
+            </div>
+            <input type="range" id="speed-slider" min="0.1" max="5.0" value="1.0" step="0.1">
+            <div class="slider-hints">
+              <span>0.1s (Fast)</span>
+              <span>1.0s (Default)</span>
+              <span>5.0s (Slow)</span>
+            </div>
           </div>
-          <input type="range" id="volume-slider" min="0" max="100" value="100" step="1">
-        </div>
-      </div>
 
-      <div class="button-row">
-        <button id="start-btn" class="btn btn-primary">Start</button>
-        <button id="pause-btn" class="btn btn-secondary" disabled>Pause</button>
-        <button id="reset-btn" class="btn btn-outline" disabled>Reset</button>
-        <button id="test-audio-btn" class="btn btn-ghost">Test Alarm</button>
-      </div>
-
-      <div class="history-panel">
-        <div class="history-header">
-          <span>Recent Cycles</span>
-          <button id="clear-history-btn" class="btn-link">Clear</button>
+          <div class="roller-options-row">
+            <label class="checkbox-label" for="pause-on-hit">
+              <input type="checkbox" id="pause-on-hit">
+              <span>Pause rolling when 100 is reached</span>
+            </label>
+          </div>
         </div>
-        <ul id="history-list" class="history-list">
-          <li class="history-empty">No completed timers yet</li>
-        </ul>
-      </div>
-    </main>
+
+        <div class="button-row">
+          <button id="roller-start-btn" class="btn btn-primary">Start Roller</button>
+          <button id="roller-stop-btn" class="btn btn-secondary" disabled>Stop</button>
+          <button id="roller-once-btn" class="btn btn-outline">Roll Once</button>
+          <button id="roller-test-btn" class="btn btn-ghost">Test 100 Hit</button>
+        </div>
+
+        <div class="roller-stats-row">
+          <div class="stat-box">
+            <span class="stat-label">Total Rolls</span>
+            <span id="total-rolls-count" class="stat-value">0</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-label">100 Hits</span>
+            <span id="total-hits-count" class="stat-value">0</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-label">Latest Item</span>
+            <span id="latest-hit-name" class="stat-value">None</span>
+          </div>
+        </div>
+
+        <div class="history-panel">
+          <div class="history-header">
+            <span>Recent Hits (TTS Triggered)</span>
+            <button id="clear-roller-history-btn" class="btn-link">Clear</button>
+          </div>
+          <ul id="roller-history-list" class="history-list">
+            <li class="history-empty">No 100 hits yet</li>
+          </ul>
+        </div>
+      </section>
+    </div>
 
     <footer class="footer">
-      <span>Runs in background tabs. Title bar reflects remaining time.</span>
+      <span>Runs in background tabs. Title bar reflects remaining countdown.</span>
     </footer>
   </div>
 
