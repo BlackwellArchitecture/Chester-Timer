@@ -1,6 +1,6 @@
 # A60 Timer, Jackpot Roller & Dice Roller
 
-A modular web tool featuring randomized countdown intervals, a 1-in-100 jackpot roller with sacrifice mechanics, a customizable range dice roller, and a real-time activity log stream.
+A modular web tool featuring randomized countdown intervals, a 1-in-100 jackpot roller with sacrifice mechanics, a customizable range dice roller, a real-time activity log stream, and a full-resolution HUD Mode.
 
 ## Features
 
@@ -35,13 +35,21 @@ A modular web tool featuring randomized countdown intervals, a 1-in-100 jackpot 
 - Fast presets for standard tabletop dice: D4, D6, D8, D10, D12, D20, D100.
 - Quick animated rolling effect and tactile results display.
 
-### 4. Real-Time Activity Logs Sidebar
+### 4. HUD Mode (Full Resolution Display)
+- One-click **HUD Mode** button in the header removes all complex controls, buttons, and sidebars.
+- Utilizes the full resolution and viewport of your screen for maximal visual legibility.
+- Focuses solely on the core visuals:
+  - **A60 countdown timer**: Giant high-visibility clock display and cycle status.
+  - **Jackpot roller**: Clean status badge ("Currently Rolling" or "Inactive"), live roll number, and a dedicated **Last Rolled Item** card displaying the item's image, name, and how many minutes ago it dropped (plus red flashing "SACRIFICE" indicator if triggered).
+- Quick **"Exit HUD"** button or press **Escape** to return to standard controls anytime.
+
+### 5. Real-Time Activity Logs Sidebar
 - Positioned on the right side of the screen.
 - Compact, color-coded stream tracking:
   - Timer cycles, pauses, and alarms.
-  - 1-100 roll ticks (with toggle to silence or include individual rolls).
   - Jackpot triggers, item drop rates, and sacrifice rolls.
   - Dice roll results and ranges.
+  - Single 1-100 roll ticks (disabled by default to keep logs clean; can be toggled on anytime).
 - Full date and time timestamp (`YYYY-MM-DD HH:MM:SS`) for every action.
 - Live dynamic "X ago" age indicator (`just now`, `5s ago`, `2m ago`, etc.) updating in real-time.
 - Quick "Clear" action and buffer management.

@@ -128,6 +128,25 @@
   const logRollsToggle = document.getElementById('log-rolls-toggle');
 
   // ==========================================
+  // DOM ELEMENTS - HUD MODE
+  // ==========================================
+  const hudModeBtn = document.getElementById('hud-mode-btn');
+  const exitHudBtn = document.getElementById('exit-hud-btn');
+  const hudOverlay = document.getElementById('hud-overlay');
+
+  const hudTimerStatus = document.getElementById('hud-timer-status');
+  const hudTimerDisplay = document.getElementById('hud-timer-display');
+  const hudCycleInfo = document.getElementById('hud-cycle-info');
+
+  const hudRollerStatus = document.getElementById('hud-roller-status');
+  const hudRollNumber = document.getElementById('hud-roll-number');
+  const hudLastImg = document.getElementById('hud-last-img');
+  const hudNoItemPlaceholder = document.getElementById('hud-no-item-placeholder');
+  const hudLastName = document.getElementById('hud-last-name');
+  const hudLastTime = document.getElementById('hud-last-time');
+  const hudSacrificeBanner = document.getElementById('hud-sacrifice-banner');
+
+  // ==========================================
   // STATE
   // ==========================================
   // Timer State
@@ -144,6 +163,18 @@
   let totalRolls = 0;
   let totalJackpots = 0;
   let totalSacrifices = 0;
+
+  // Last Rolled Item State
+  let lastRolledItem = {
+    name: null,
+    image: null,
+    chanceText: null,
+    timestamp: null,
+    isSacrifice: false
+  };
+
+  // HUD Mode State
+  let isHudMode = false;
 
   // Logs State
   let totalLogEvents = 0;
@@ -196,10 +227,20 @@
     return `${days}d ago`;
   }
 
+  function formatMinutesAgo(timestamp) {
+    if (!timestamp) return 'No jackpot reached yet';
+    const diffSec = Math.floor((Date.now() - timestamp) / 1000);
+    const mins = Math.floor(diffSec / 60);
+    if (mins < 1) return 'less than 1 minute ago';
+    if (mins === 1) return '1 minute ago';
+    return `${mins} minutes ago`;
+  }
+
   // ==========================================
   // ACTIVITY LOGS SYSTEM
   // ==========================================
   function addLog(category, message) {
+    // Disabled by default for single rolls unless checked
     if (category === 'roll' && !logRollsToggle.checked) {
       return;
     }
@@ -252,6 +293,9 @@
         }
       }
     });
+
+    // Also update HUD last item time
+    updateHudLastItem();
   }
 
   setInterval(updateAllLogAges, 2000);
@@ -430,21 +474,34 @@
   function updateTimerDisplay() {
     const timeStr = formatMs(remainingMs);
     timerDisplay.textContent = timeStr;
+    hudTimerDisplay.textContent = timeStr;
 
     if (timerState === 'running') {
       document.title = `${timeStr} - A60 Timer`;
       statusLabel.textContent = `Running (Cycle #${currentCycle})`;
       statusLabel.className = 'status-label running';
       cycleInfo.textContent = `Current cycle target: ${formatSeconds(currentCycleTotalSeconds)} | Range: ${minDisplay.textContent} - ${maxDisplay.textContent}`;
+
+      hudTimerStatus.textContent = `Running (Cycle #${currentCycle})`;
+      hudTimerStatus.className = 'hud-status-badge';
+      hudCycleInfo.textContent = `Cycle: ${currentCycle} (${formatSeconds(currentCycleTotalSeconds)})`;
     } else if (timerState === 'paused') {
       document.title = `[Paused] ${timeStr} - A60 Timer`;
       statusLabel.textContent = `Paused (Cycle #${currentCycle})`;
       statusLabel.className = 'status-label paused';
+
+      hudTimerStatus.textContent = `Paused (Cycle #${currentCycle})`;
+      hudTimerStatus.className = 'hud-status-badge paused';
+      hudCycleInfo.textContent = `Paused at ${timeStr}`;
     } else {
       document.title = 'A60 Timer';
       statusLabel.textContent = 'Ready';
       statusLabel.className = 'status-label';
       cycleInfo.textContent = 'Set range below and press Start';
+
+      hudTimerStatus.textContent = 'Ready';
+      hudTimerStatus.className = 'hud-status-badge inactive';
+      hudCycleInfo.textContent = 'Cycle: 0';
     }
   }
 
@@ -528,6 +585,30 @@
     speedDisplay.textContent = `${rollSpeedSec.toFixed(1)}s`;
   }
 
+  function updateHudLastItem() {
+    if (lastRolledItem.name) {
+      hudLastImg.src = lastRolledItem.image;
+      hudLastImg.alt = lastRolledItem.name;
+      hudLastImg.classList.remove('hidden');
+      hudNoItemPlaceholder.classList.add('hidden');
+
+      hudLastName.textContent = `${lastRolledItem.name} (${lastRolledItem.chanceText})`;
+      hudLastTime.textContent = formatMinutesAgo(lastRolledItem.timestamp);
+
+      if (lastRolledItem.isSacrifice) {
+        hudSacrificeBanner.classList.remove('hidden');
+      } else {
+        hudSacrificeBanner.classList.add('hidden');
+      }
+    } else {
+      hudLastImg.classList.add('hidden');
+      hudNoItemPlaceholder.classList.remove('hidden');
+      hudLastName.textContent = 'Waiting for roll...';
+      hudLastTime.textContent = 'No jackpot reached yet';
+      hudSacrificeBanner.classList.add('hidden');
+    }
+  }
+
   function triggerJackpotHit(chosenItem, forcedSacrificeRoll = null) {
     totalJackpots += 1;
     totalHitsCount.textContent = totalJackpots;
@@ -535,6 +616,15 @@
     // Roll 1 to 10 for Sacrifice check
     const sacrificeRoll = forcedSacrificeRoll !== null ? forcedSacrificeRoll : getRandomInt(1, 10);
     const isSacrifice = (sacrificeRoll === 10);
+
+    // Save as last rolled item
+    lastRolledItem = {
+      name: chosenItem.name,
+      image: chosenItem.image,
+      chanceText: chosenItem.chanceText,
+      timestamp: Date.now(),
+      isSacrifice: isSacrifice
+    };
 
     // Update result card
     resultImage.src = chosenItem.image;
@@ -570,6 +660,7 @@
     }
 
     rollerResultCard.classList.remove('hidden');
+    updateHudLastItem();
 
     // Pause on hit if checkbox is checked
     if (pauseOnHitCheckbox.checked && rollerRunning) {
@@ -597,16 +688,21 @@
     // Roll 1 to 100
     const roll = getRandomInt(1, 100);
     rollNumberDisplay.textContent = roll;
+    hudRollNumber.textContent = roll;
 
     if (roll === 100) {
       rollNumberDisplay.classList.add('hit-highlight');
+      hudRollNumber.classList.add('hit-highlight');
       const chosen = pickJackpotItem();
       triggerJackpotHit(chosen);
     } else {
       rollNumberDisplay.classList.remove('hit-highlight');
+      hudRollNumber.classList.remove('hit-highlight');
       if (rollerRunning) {
         rollerStatus.textContent = 'Rolling...';
         rollerStatus.className = 'status-label running';
+        hudRollerStatus.textContent = 'Currently Rolling';
+        hudRollerStatus.className = 'hud-status-badge';
       }
       addLog('roll', `Rolled ${roll} / 100 (Roll #${totalRolls})`);
     }
@@ -618,8 +714,13 @@
     lastRollTimestamp = Date.now();
     rollerStartBtn.disabled = true;
     rollerStopBtn.disabled = false;
+
     rollerStatus.textContent = 'Rolling...';
     rollerStatus.className = 'status-label running';
+
+    hudRollerStatus.textContent = 'Currently Rolling';
+    hudRollerStatus.className = 'hud-status-badge';
+
     addLog('roll', `1-100 Roller started (Speed: ${rollSpeedSec.toFixed(1)}s)`);
     updateWorkerState();
   }
@@ -628,8 +729,13 @@
     rollerRunning = false;
     rollerStartBtn.disabled = false;
     rollerStopBtn.disabled = true;
+
     rollerStatus.textContent = 'Stopped';
     rollerStatus.className = 'status-label';
+
+    hudRollerStatus.textContent = 'Inactive';
+    hudRollerStatus.className = 'hud-status-badge inactive';
+
     addLog('roll', '1-100 Roller stopped.');
     updateWorkerState();
   }
@@ -647,6 +753,7 @@
     totalRolls += 1;
     totalRollsCount.textContent = totalRolls;
     rollNumberDisplay.textContent = '100';
+    hudRollNumber.textContent = '100';
     rollNumberDisplay.classList.add('hit-highlight');
     const chosen = pickJackpotItem();
     triggerJackpotHit(chosen);
@@ -657,6 +764,7 @@
     totalRolls += 1;
     totalRollsCount.textContent = totalRolls;
     rollNumberDisplay.textContent = '100';
+    hudRollNumber.textContent = '100';
     rollNumberDisplay.classList.add('hit-highlight');
     const chosen = pickJackpotItem();
     triggerJackpotHit(chosen, 10);
@@ -692,7 +800,6 @@
     diceStatus.className = 'status-label running';
     diceResultDisplay.classList.add('dice-rolling');
 
-    // Quick rolling animation
     let count = 0;
     const animInterval = setInterval(() => {
       diceResultDisplay.textContent = getRandomInt(min, max);
@@ -745,6 +852,38 @@
   });
 
   // ==========================================
+  // HUD MODE LOGIC
+  // ==========================================
+  function enterHudMode() {
+    isHudMode = true;
+    hudOverlay.classList.remove('hidden');
+    updateTimerDisplay();
+    updateHudLastItem();
+
+    if (rollerRunning) {
+      hudRollerStatus.textContent = 'Currently Rolling';
+      hudRollerStatus.className = 'hud-status-badge';
+    } else {
+      hudRollerStatus.textContent = 'Inactive';
+      hudRollerStatus.className = 'hud-status-badge inactive';
+    }
+  }
+
+  function exitHudMode() {
+    isHudMode = false;
+    hudOverlay.classList.add('hidden');
+  }
+
+  hudModeBtn.addEventListener('click', enterHudMode);
+  exitHudBtn.addEventListener('click', exitHudMode);
+
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && isHudMode) {
+      exitHudMode();
+    }
+  });
+
+  // ==========================================
   // INITIALIZATION
   // ==========================================
   handleMinChange();
@@ -753,5 +892,6 @@
   handleSpeedChange();
   updateDiceRangeInfo();
   updateTimerDisplay();
+  updateHudLastItem();
   addLog('timer', 'System initialized and ready.');
 })();

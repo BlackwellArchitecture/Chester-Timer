@@ -7,12 +7,20 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="app-layout">
+  <!-- MAIN FULL APPLICATION LAYOUT -->
+  <div class="app-layout" id="main-app-layout">
     <!-- LEFT / MAIN MODULES COLUMN -->
     <div class="modules-column">
       <header class="header">
-        <h1 class="title">A60 Timer</h1>
-        <p class="subtitle">Countdown timer, 1-in-100 jackpot roller, and customizable dice</p>
+        <div class="header-content">
+          <div class="header-titles">
+            <h1 class="title">A60 Timer</h1>
+            <p class="subtitle">Countdown timer, 1-in-100 jackpot roller, and customizable dice</p>
+          </div>
+          <div class="header-actions">
+            <button id="hud-mode-btn" class="btn btn-outline hud-mode-btn">HUD Mode</button>
+          </div>
+        </div>
       </header>
 
       <div class="cards-grid">
@@ -221,7 +229,7 @@
 
         <div class="logs-filter-bar">
           <label class="logs-checkbox" for="log-rolls-toggle">
-            <input type="checkbox" id="log-rolls-toggle" checked>
+            <input type="checkbox" id="log-rolls-toggle">
             <span>Log single rolls</span>
           </label>
         </div>
@@ -231,6 +239,50 @@
         </div>
       </div>
     </aside>
+  </div>
+
+  <!-- HUD MODE FULL RESOLUTION OVERLAY -->
+  <div id="hud-overlay" class="hud-overlay hidden">
+    <div class="hud-topbar">
+      <div class="hud-brand">HUD MODE</div>
+      <button id="exit-hud-btn" class="btn btn-outline hud-exit-btn">Exit HUD (Esc)</button>
+    </div>
+
+    <div class="hud-content-grid">
+      <!-- HUD TIMER PANEL -->
+      <div class="hud-panel hud-timer-panel">
+        <div class="hud-panel-title">A60 Countdown Timer</div>
+        <div id="hud-timer-status" class="hud-status-badge">Ready</div>
+        <div id="hud-timer-display" class="hud-big-timer">00:00</div>
+        <div id="hud-cycle-info" class="hud-meta-text">Cycle: 0</div>
+      </div>
+
+      <!-- HUD JACKPOT ROLLER PANEL -->
+      <div class="hud-panel hud-roller-panel">
+        <div class="hud-panel-title">Jackpot Roller</div>
+        <div id="hud-roller-status" class="hud-status-badge">Currently Rolling</div>
+
+        <div class="hud-roll-box">
+          <span class="hud-roll-label">Current Roll</span>
+          <div id="hud-roll-number" class="hud-roll-number">--</div>
+        </div>
+
+        <div class="hud-last-item-card">
+          <div class="hud-last-item-heading">Last Rolled Item</div>
+          <div class="hud-last-item-body">
+            <div class="hud-item-media" id="hud-item-media">
+              <img id="hud-last-img" src="" alt="Last rolled item" class="hidden">
+              <div id="hud-no-item-placeholder" class="hud-placeholder-text">None yet</div>
+            </div>
+            <div class="hud-item-info">
+              <div id="hud-last-name" class="hud-item-title">Waiting for roll...</div>
+              <div id="hud-last-time" class="hud-item-age">No jackpot reached yet</div>
+              <div id="hud-sacrifice-banner" class="sacrifice-flashing-text hidden">SACRIFICE</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <audio id="alarm-audio" src="Alarmm.m4a" preload="auto"></audio>
