@@ -10,7 +10,7 @@
   <div class="container">
     <header class="header">
       <h1 class="title">A60 Timer</h1>
-      <p class="subtitle">Randomized interval countdown timer and probability roller</p>
+      <p class="subtitle">Randomized interval countdown timer and 1-in-100 jackpot roller</p>
     </header>
 
     <div class="cards-grid">
@@ -75,9 +75,9 @@
         </div>
       </section>
 
-      <!-- ROLLER CARD -->
+      <!-- JACKPOT ROLLER CARD -->
       <section class="card" aria-label="Roller Section">
-        <h2 class="card-title">1-100 Item Roller</h2>
+        <h2 class="card-title">1-100 Jackpot Roller</h2>
 
         <div class="roller-display-wrap">
           <div id="roller-status" class="status-label">Inactive</div>
@@ -88,10 +88,13 @@
 
           <div id="roller-result-card" class="roller-result-card hidden">
             <div class="result-img-wrapper">
-              <img id="result-image" src="" alt="Roller item result">
+              <img id="result-image" src="" alt="Jackpot item result" loading="eager">
             </div>
             <div class="result-info">
-              <span class="result-hit-badge">100 HIT</span>
+              <div class="result-header-line">
+                <span class="result-hit-badge">JACKPOT</span>
+                <span id="result-chance" class="result-chance-badge">0%</span>
+              </div>
               <div id="result-name" class="result-name">None</div>
             </div>
           </div>
@@ -114,16 +117,30 @@
           <div class="roller-options-row">
             <label class="checkbox-label" for="pause-on-hit">
               <input type="checkbox" id="pause-on-hit">
-              <span>Pause rolling when 100 is reached</span>
+              <span>Pause rolling when Jackpot (100) is reached</span>
             </label>
           </div>
+
+          <!-- DROP CHANCES COLLAPSIBLE / SUMMARY -->
+          <details class="loot-table-details">
+            <summary class="loot-table-summary">View Jackpot Drop Chances</summary>
+            <div class="loot-table-grid">
+              <div class="loot-item-row"><span class="loot-name">Sprint</span><span class="loot-chance chance-common">30%</span></div>
+              <div class="loot-item-row"><span class="loot-name">CodeBreacher</span><span class="loot-chance chance-common">30%</span></div>
+              <div class="loot-item-row"><span class="loot-name">Medkit</span><span class="loot-chance chance-uncommon">20%</span></div>
+              <div class="loot-item-row"><span class="loot-name">Peri</span><span class="loot-chance chance-rare">10%</span></div>
+              <div class="loot-item-row"><span class="loot-name">Dweller Chunk</span><span class="loot-chance chance-epic">5%</span></div>
+              <div class="loot-item-row"><span class="loot-name">Red Remote</span><span class="loot-chance chance-legendary">2.5%</span></div>
+              <div class="loot-item-row"><span class="loot-name">Blue Remote</span><span class="loot-chance chance-legendary">2.5%</span></div>
+            </div>
+          </details>
         </div>
 
         <div class="button-row">
           <button id="roller-start-btn" class="btn btn-primary">Start Roller</button>
           <button id="roller-stop-btn" class="btn btn-secondary" disabled>Stop</button>
           <button id="roller-once-btn" class="btn btn-outline">Roll Once</button>
-          <button id="roller-test-btn" class="btn btn-ghost">Test 100 Hit</button>
+          <button id="roller-test-btn" class="btn btn-ghost">Test Jackpot</button>
         </div>
 
         <div class="roller-stats-row">
@@ -132,7 +149,7 @@
             <span id="total-rolls-count" class="stat-value">0</span>
           </div>
           <div class="stat-box">
-            <span class="stat-label">100 Hits</span>
+            <span class="stat-label">Jackpots</span>
             <span id="total-hits-count" class="stat-value">0</span>
           </div>
           <div class="stat-box">
@@ -143,11 +160,11 @@
 
         <div class="history-panel">
           <div class="history-header">
-            <span>Recent Hits (TTS Triggered)</span>
+            <span>Recent Jackpots (TTS Triggered)</span>
             <button id="clear-roller-history-btn" class="btn-link">Clear</button>
           </div>
           <ul id="roller-history-list" class="history-list">
-            <li class="history-empty">No 100 hits yet</li>
+            <li class="history-empty">No jackpots hit yet</li>
           </ul>
         </div>
       </section>

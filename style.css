@@ -92,7 +92,7 @@ body {
   border: 1px solid var(--card-border);
   border-radius: 12px;
   padding: 20px 16px;
-  min-height: 190px;
+  min-height: 200px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -118,7 +118,7 @@ body {
 }
 
 .status-label.hit {
-  color: #a855f7;
+  color: #38bdf8;
 }
 
 .timer-display {
@@ -166,16 +166,16 @@ body {
 }
 
 .roller-result-card {
-  margin-top: 10px;
+  margin-top: 12px;
   display: flex;
   align-items: center;
-  gap: 14px;
-  background: rgba(37, 99, 235, 0.12);
-  border: 1px solid rgba(56, 189, 248, 0.4);
-  padding: 10px 14px;
-  border-radius: 10px;
+  gap: 16px;
+  background: rgba(37, 99, 235, 0.14);
+  border: 1px solid rgba(56, 189, 248, 0.45);
+  padding: 12px 16px;
+  border-radius: 12px;
   width: 100%;
-  max-width: 340px;
+  max-width: 360px;
   animation: fadeIn 0.25s ease;
 }
 
@@ -189,9 +189,9 @@ body {
 }
 
 .result-img-wrapper {
-  width: 60px;
-  height: 60px;
-  border-radius: 8px;
+  width: 72px;
+  height: 72px;
+  border-radius: 10px;
   background: #11141a;
   border: 1px solid var(--card-border);
   display: flex;
@@ -199,19 +199,27 @@ body {
   justify-content: center;
   overflow: hidden;
   flex-shrink: 0;
+  padding: 4px;
 }
 
 .result-img-wrapper img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
 }
 
 .result-info {
   text-align: left;
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 4px;
+  overflow: hidden;
+}
+
+.result-header-line {
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .result-hit-badge {
@@ -222,13 +230,25 @@ body {
   color: #ffffff;
   padding: 2px 6px;
   border-radius: 4px;
-  align-self: flex-start;
+}
+
+.result-chance-badge {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.1);
+  color: #cbd5e1;
+  padding: 2px 6px;
+  border-radius: 4px;
 }
 
 .result-name {
-  font-size: 1.1rem;
+  font-size: 1.15rem;
   font-weight: 700;
   color: #ffffff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .controls-panel {
@@ -309,7 +329,7 @@ input[type="range"]::-moz-range-thumb {
 .roller-options-row {
   display: flex;
   align-items: center;
-  padding: 4px 0;
+  padding: 2px 0;
 }
 
 .checkbox-label {
@@ -327,6 +347,62 @@ input[type="range"]::-moz-range-thumb {
   height: 15px;
   cursor: pointer;
 }
+
+/* Loot table collapsible */
+.loot-table-details {
+  background: rgba(0, 0, 0, 0.15);
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 0.8rem;
+}
+
+.loot-table-summary {
+  cursor: pointer;
+  color: var(--text-muted);
+  font-weight: 500;
+  user-select: none;
+  outline: none;
+}
+
+.loot-table-summary:hover {
+  color: var(--text-main);
+}
+
+.loot-table-grid {
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 4px;
+}
+
+.loot-item-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 3px 6px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.loot-name {
+  color: var(--text-main);
+  font-size: 0.78rem;
+}
+
+.loot-chance {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+
+.chance-common { color: #38bdf8; background: rgba(56, 189, 248, 0.1); }
+.chance-uncommon { color: #10b981; background: rgba(16, 185, 129, 0.1); }
+.chance-rare { color: #f59e0b; background: rgba(245, 158, 11, 0.1); }
+.chance-epic { color: #c084fc; background: rgba(192, 132, 252, 0.1); }
+.chance-legendary { color: #f87171; background: rgba(248, 113, 113, 0.1); }
 
 .button-row {
   display: grid;

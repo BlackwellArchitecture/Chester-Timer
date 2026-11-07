@@ -2,11 +2,70 @@
   // ==========================================
   // CONFIG & CONSTANTS
   // ==========================================
-  const ROLLER_ITEMS = [
-    { name: 'Bleach', image: '2_Bleach.png', tts: 'Bleach' },
-    { name: 'Coagulate', image: '1_Coagulate.png', tts: 'Coagulate' },
-    { name: 'Bobberfish', image: '3_Bobberfish.webp', tts: 'Bobberfish' }
+  const JACKPOT_ITEMS = [
+    {
+      name: 'Sprint',
+      chance: 30,
+      chanceText: '30%',
+      image: 'Jackpot/Sprint.png',
+      tts: 'Sprint',
+      rarityClass: 'chance-common'
+    },
+    {
+      name: 'CodeBreacher',
+      chance: 30,
+      chanceText: '30%',
+      image: 'Jackpot/Code%20breacher.png',
+      tts: 'Code Breacher',
+      rarityClass: 'chance-common'
+    },
+    {
+      name: 'Medkit',
+      chance: 20,
+      chanceText: '20%',
+      image: 'Jackpot/Medkit.webp',
+      tts: 'Medkit',
+      rarityClass: 'chance-uncommon'
+    },
+    {
+      name: 'Peri',
+      chance: 10,
+      chanceText: '10%',
+      image: 'Jackpot/Perithesene.png',
+      tts: 'Peri',
+      rarityClass: 'chance-rare'
+    },
+    {
+      name: 'Dweller Chunk',
+      chance: 5,
+      chanceText: '5%',
+      image: 'Jackpot/Dweller%20Chunk.webp',
+      tts: 'Dweller Chunk',
+      rarityClass: 'chance-epic'
+    },
+    {
+      name: 'Red Remote',
+      chance: 2.5,
+      chanceText: '2.5%',
+      image: 'Jackpot/Red%20remote.webp',
+      tts: 'Red Remote',
+      rarityClass: 'chance-legendary'
+    },
+    {
+      name: 'Blue Remote',
+      chance: 2.5,
+      chanceText: '2.5%',
+      image: 'Jackpot/Blue_Remote.png',
+      tts: 'Blue Remote',
+      rarityClass: 'chance-legendary'
+    }
   ];
+
+  // Pre-cache jackpot images into memory
+  JACKPOT_ITEMS.forEach((item) => {
+    const img = new Image();
+    img.src = item.image;
+  });
 
   // ==========================================
   // DOM ELEMENTS - TIMER
@@ -32,13 +91,14 @@
   const alarmAudio = document.getElementById('alarm-audio');
 
   // ==========================================
-  // DOM ELEMENTS - ROLLER
+  // DOM ELEMENTS - JACKPOT ROLLER
   // ==========================================
   const rollerStatus = document.getElementById('roller-status');
   const rollNumberDisplay = document.getElementById('roll-number-display');
   const rollerResultCard = document.getElementById('roller-result-card');
   const resultImage = document.getElementById('result-image');
   const resultName = document.getElementById('result-name');
+  const resultChance = document.getElementById('result-chance');
 
   const speedSlider = document.getElementById('speed-slider');
   const speedDisplay = document.getElementById('speed-display');
@@ -71,7 +131,7 @@
   let rollSpeedSec = 1.0;
   let lastRollTimestamp = 0;
   let totalRolls = 0;
-  let totalHits = 0;
+  let totalJackpots = 0;
 
   // Shared Web Worker
   let worker = null;
@@ -95,6 +155,19 @@
     const lower = Math.min(min, max);
     const upper = Math.max(min, max);
     return Math.floor(Math.random() * (upper - lower + 1)) + lower;
+  }
+
+  // Weighted selection based on jackpot percentages
+  function pickJackpotItem() {
+    const rand = Math.random() * 100;
+    let cumulative = 0;
+    for (const item of JACKPOT_ITEMS) {
+      cumulative += item.chance;
+      if (rand < cumulative) {
+        return item;
+      }
+    }
+    return JACKPOT_ITEMS[JACKPOT_ITEMS.length - 1];
   }
 
   // TTS Speech Synthesis
@@ -121,7 +194,6 @@
     try {
       alarmAudio.load();
       if ('speechSynthesis' in window) {
-        // Silent or blank priming
         const silentUtterance = new SpeechSynthesisUtterance('');
         window.speechSynthesis.speak(silentUtterance);
       }
@@ -353,47 +425,48 @@
   volumeSlider.addEventListener('input', handleVolumeChange);
 
   // ==========================================
-  // ROLLER LOGIC
+  // JACKPOT ROLLER LOGIC
   // ==========================================
   function handleSpeedChange() {
     rollSpeedSec = parseFloat(speedSlider.value);
     speedDisplay.textContent = `${rollSpeedSec.toFixed(1)}s`;
   }
 
-  function triggerHit(chosenItem) {
-    totalHits += 1;
-    totalHitsCount.textContent = totalHits;
-    latestHitName.textContent = chosenItem.name;
+  function triggerJackpotHit(chosenItem) {
+    totalJackpots += 1;
+    totalHitsCount.textContent = totalJackpots;
+    latestHitName.textContent = `${chosenItem.name} (${chosenItem.chanceText})`;
 
     // Display image & details
     resultImage.src = chosenItem.image;
     resultImage.alt = chosenItem.name;
     resultName.textContent = chosenItem.name;
+    resultChance.textContent = chosenItem.chanceText;
     rollerResultCard.classList.remove('hidden');
 
-    rollerStatus.textContent = `Hit: ${chosenItem.name}`;
+    rollerStatus.textContent = `Jackpot: ${chosenItem.name} (${chosenItem.chanceText})`;
     rollerStatus.className = 'status-label hit';
 
     // Speak TTS
     speakTTS(chosenItem.tts);
 
-    // Add to roller history
-    addRollerHistoryEntry(chosenItem.name);
+    // Add to history
+    addRollerHistoryEntry(chosenItem);
 
-    // Check pause on hit
+    // Pause on hit if checkbox checked
     if (pauseOnHitCheckbox.checked && rollerRunning) {
       stopRoller();
     }
   }
 
-  function addRollerHistoryEntry(itemName) {
+  function addRollerHistoryEntry(item) {
     if (rollerHistoryList.querySelector('.history-empty')) {
       rollerHistoryList.innerHTML = '';
     }
     const li = document.createElement('li');
     const now = new Date();
     const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-    li.innerHTML = `<span><span class="hit-name">${itemName}</span> (100)</span><span class="highlight">${timeStr}</span>`;
+    li.innerHTML = `<span><span class="hit-name">${item.name}</span> <span class="highlight">(${item.chanceText})</span></span><span>${timeStr}</span>`;
     rollerHistoryList.prepend(li);
   }
 
@@ -407,9 +480,9 @@
 
     if (roll === 100) {
       rollNumberDisplay.classList.add('hit-highlight');
-      // Pick randomly among Bleach, Coagulate, Bobberfish
-      const chosen = ROLLER_ITEMS[Math.floor(Math.random() * ROLLER_ITEMS.length)];
-      triggerHit(chosen);
+      // Jackpot reached: select random item by percentage
+      const chosen = pickJackpotItem();
+      triggerJackpotHit(chosen);
     } else {
       rollNumberDisplay.classList.remove('hit-highlight');
       if (rollerRunning) {
@@ -453,12 +526,12 @@
     totalRollsCount.textContent = totalRolls;
     rollNumberDisplay.textContent = '100';
     rollNumberDisplay.classList.add('hit-highlight');
-    const chosen = ROLLER_ITEMS[Math.floor(Math.random() * ROLLER_ITEMS.length)];
-    triggerHit(chosen);
+    const chosen = pickJackpotItem();
+    triggerJackpotHit(chosen);
   });
 
   clearRollerHistoryBtn.addEventListener('click', () => {
-    rollerHistoryList.innerHTML = '<li class="history-empty">No 100 hits yet</li>';
+    rollerHistoryList.innerHTML = '<li class="history-empty">No jackpots hit yet</li>';
   });
 
   speedSlider.addEventListener('input', handleSpeedChange);

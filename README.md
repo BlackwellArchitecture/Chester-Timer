@@ -1,6 +1,6 @@
-# A60 Timer & Item Roller
+# A60 Timer & Jackpot Roller
 
-A minimalist web countdown timer with randomized intervals and a probability-based item roller.
+A minimalist web countdown timer with randomized intervals and a 1-in-100 jackpot roller.
 
 ## Features
 
@@ -12,23 +12,29 @@ A minimalist web countdown timer with randomized intervals and a probability-bas
 - Real-time tab title bar updates showing the remaining time and timer state.
 - Pause, Resume, Reset controls and volume adjustment.
 
-### 1-100 Item Roller
+### 1-100 Jackpot Roller
 - Sits right next to the timer in a responsive layout.
 - Rolls random numbers from 1 to 100 at a configurable rolling speed (default: 1.0 second).
-- When it reaches 100, randomly picks one of three items:
-  - **Bleach** (`2_Bleach.png`)
-  - **Coagulate** (`1_Coagulate.png`)
-  - **Bobberfish** (`3_Bobberfish.webp`)
-- Triggers text-to-speech (TTS) via the Web Speech API speaking the name of the chosen item ("Bleach", "Coagulate", or "Bobberfish").
-- Displays the winning item's image and name.
-- Optional "Pause rolling when 100 is reached" setting.
-- "Roll Once" and "Test 100 Hit" buttons for manual rolling and preview testing.
-- Tracks total rolls, 100 hits, and recent hit history.
+- When it reaches **100** (Jackpot), it selects one random item according to its drop chances:
+  - **Sprint**: 30% (`Jackpot/Sprint.png`)
+  - **CodeBreacher**: 30% (`Jackpot/Code breacher.png`)
+  - **Medkit**: 20% (`Jackpot/Medkit.webp`)
+  - **Peri**: 10% (`Jackpot/Perithesene.png`)
+  - **Dweller Chunk**: 5% (`Jackpot/Dweller Chunk.webp`)
+  - **Red Remote**: 2.5% (`Jackpot/Red remote.webp`)
+  - **Blue Remote**: 2.5% (`Jackpot/Blue_Remote.png`)
+- Displays the selected item's image, name, and chance percentage.
+- Plays Text-to-Speech (TTS) via the Web Speech API speaking the name of the winning item.
+- Interactive dropdown table showing all item drop probabilities.
+- Optional "Pause rolling when Jackpot is reached" toggle.
+- "Roll Once" and "Test Jackpot" buttons for manual rolling and preview testing.
+- Tracks total rolls, jackpots hit, and recent jackpot history with timestamps.
 
 ### Design
-- Simple, high-contrast dark interface with zero emojis.
-- Operates reliably in background tabs.
+- Simple, high-contrast dark layout with zero emojis.
+- Background tab resilience.
 
 ## GitHub Pages Deployment
 
-The project is hosted directly on GitHub Pages from the `main` branch.
+The tool is hosted directly on GitHub Pages from the `main` branch:
+[https://blackwellarchitecture.github.io/Chester-Timer/](https://blackwellarchitecture.github.io/Chester-Timer/)
