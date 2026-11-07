@@ -7,172 +7,230 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
-    <header class="header">
-      <h1 class="title">A60 Timer</h1>
-      <p class="subtitle">Randomized interval countdown timer and 1-in-100 jackpot roller</p>
-    </header>
+  <div class="app-layout">
+    <!-- LEFT / MAIN MODULES COLUMN -->
+    <div class="modules-column">
+      <header class="header">
+        <h1 class="title">A60 Timer</h1>
+        <p class="subtitle">Countdown timer, 1-in-100 jackpot roller, and customizable dice</p>
+      </header>
 
-    <div class="cards-grid">
-      <!-- TIMER CARD -->
-      <section class="card" aria-label="Timer Section">
-        <h2 class="card-title">A60 Countdown Timer</h2>
-        <div class="timer-display-wrap">
-          <div id="status-label" class="status-label">Ready</div>
-          <div id="timer-display" class="timer-display">00:00</div>
-          <div id="cycle-info" class="cycle-info">Cycle: 0 | Set range below and press Start</div>
-        </div>
-
-        <div class="controls-panel">
-          <div class="slider-group">
-            <div class="slider-header">
-              <label for="min-slider">Minimum Time</label>
-              <span id="min-display" class="time-badge">01:00</span>
-            </div>
-            <input type="range" id="min-slider" min="1" max="1800" value="60" step="1">
-            <div class="slider-hints">
-              <span>1s</span>
-              <span>30m</span>
-            </div>
+      <div class="cards-grid">
+        <!-- MODULE 1: TIMER CARD -->
+        <section class="card" aria-label="Timer Section">
+          <h2 class="card-title">A60 Countdown Timer</h2>
+          <div class="timer-display-wrap">
+            <div id="status-label" class="status-label">Ready</div>
+            <div id="timer-display" class="timer-display">00:00</div>
+            <div id="cycle-info" class="cycle-info">Cycle: 0 | Set range below and press Start</div>
           </div>
 
-          <div class="slider-group">
-            <div class="slider-header">
-              <label for="max-slider">Maximum Time</label>
-              <span id="max-display" class="time-badge">05:00</span>
-            </div>
-            <input type="range" id="max-slider" min="1" max="1800" value="300" step="1">
-            <div class="slider-hints">
-              <span>1s</span>
-              <span>30m</span>
-            </div>
-          </div>
-
-          <div class="slider-group volume-group">
-            <div class="slider-header">
-              <label for="volume-slider">Alarm Volume</label>
-              <span id="volume-display" class="time-badge">100%</span>
-            </div>
-            <input type="range" id="volume-slider" min="0" max="100" value="100" step="1">
-          </div>
-        </div>
-
-        <div class="button-row">
-          <button id="start-btn" class="btn btn-primary">Start</button>
-          <button id="pause-btn" class="btn btn-secondary" disabled>Pause</button>
-          <button id="reset-btn" class="btn btn-outline" disabled>Reset</button>
-          <button id="test-audio-btn" class="btn btn-ghost">Test Alarm</button>
-        </div>
-
-        <div class="history-panel">
-          <div class="history-header">
-            <span>Recent Timer Cycles</span>
-            <button id="clear-history-btn" class="btn-link">Clear</button>
-          </div>
-          <ul id="history-list" class="history-list">
-            <li class="history-empty">No completed timers yet</li>
-          </ul>
-        </div>
-      </section>
-
-      <!-- JACKPOT ROLLER CARD -->
-      <section class="card" aria-label="Roller Section">
-        <h2 class="card-title">1-100 Jackpot Roller</h2>
-
-        <div class="roller-display-wrap">
-          <div id="roller-status" class="status-label">Inactive</div>
-          <div class="roll-number-container">
-            <span class="roll-label">Current Roll</span>
-            <div id="roll-number-display" class="roller-number">--</div>
-          </div>
-
-          <div id="roller-result-card" class="roller-result-card hidden">
-            <div class="result-img-wrapper">
-              <img id="result-image" src="" alt="Jackpot item result" loading="eager">
-            </div>
-            <div class="result-info">
-              <div class="result-header-line">
-                <span class="result-hit-badge">JACKPOT</span>
-                <span id="result-chance" class="result-chance-badge">0%</span>
+          <div class="controls-panel">
+            <div class="slider-group">
+              <div class="slider-header">
+                <label for="min-slider">Minimum Time</label>
+                <span id="min-display" class="time-badge">01:00</span>
               </div>
-              <div id="result-name" class="result-name">None</div>
+              <input type="range" id="min-slider" min="1" max="1800" value="60" step="1">
+              <div class="slider-hints">
+                <span>1s</span>
+                <span>30m</span>
+              </div>
+            </div>
+
+            <div class="slider-group">
+              <div class="slider-header">
+                <label for="max-slider">Maximum Time</label>
+                <span id="max-display" class="time-badge">05:00</span>
+              </div>
+              <input type="range" id="max-slider" min="1" max="1800" value="300" step="1">
+              <div class="slider-hints">
+                <span>1s</span>
+                <span>30m</span>
+              </div>
+            </div>
+
+            <div class="slider-group volume-group">
+              <div class="slider-header">
+                <label for="volume-slider">Alarm Volume</label>
+                <span id="volume-display" class="time-badge">100%</span>
+              </div>
+              <input type="range" id="volume-slider" min="0" max="100" value="100" step="1">
             </div>
           </div>
-        </div>
 
-        <div class="controls-panel">
-          <div class="slider-group">
-            <div class="slider-header">
-              <label for="speed-slider">Rolling Speed</label>
-              <span id="speed-display" class="time-badge">1.0s</span>
+          <div class="button-row">
+            <button id="start-btn" class="btn btn-primary">Start</button>
+            <button id="pause-btn" class="btn btn-secondary" disabled>Pause</button>
+            <button id="reset-btn" class="btn btn-outline" disabled>Reset</button>
+            <button id="test-audio-btn" class="btn btn-ghost">Test Alarm</button>
+          </div>
+        </section>
+
+        <!-- MODULE 2: JACKPOT ROLLER CARD -->
+        <section class="card" aria-label="Roller Section">
+          <h2 class="card-title">1-100 Jackpot Roller</h2>
+
+          <div class="roller-display-wrap">
+            <div id="roller-status" class="status-label">Inactive</div>
+            <div class="roll-number-container">
+              <span class="roll-label">Current Roll</span>
+              <div id="roll-number-display" class="roller-number">--</div>
             </div>
-            <input type="range" id="speed-slider" min="0.1" max="5.0" value="1.0" step="0.1">
-            <div class="slider-hints">
-              <span>0.1s (Fast)</span>
-              <span>1.0s (Default)</span>
-              <span>5.0s (Slow)</span>
+
+            <!-- RESULT CARD WITH CLOSE BUTTON & SACRIFICE DISPLAY -->
+            <div id="roller-result-card" class="roller-result-card hidden">
+              <button id="close-result-btn" class="close-card-btn" title="Close Result">Close</button>
+              <div class="result-img-wrapper">
+                <img id="result-image" src="" alt="Jackpot item result" loading="eager">
+              </div>
+              <div class="result-info">
+                <div class="result-header-line">
+                  <span class="result-hit-badge">JACKPOT</span>
+                  <span id="result-chance" class="result-chance-badge">0%</span>
+                  <span id="sacrifice-roll-badge" class="result-chance-badge">Roll: --/10</span>
+                </div>
+                <div id="result-name" class="result-name">None</div>
+                <div id="sacrifice-banner" class="sacrifice-flashing-text hidden">SACRIFICE</div>
+              </div>
             </div>
           </div>
 
-          <div class="roller-options-row">
-            <label class="checkbox-label" for="pause-on-hit">
-              <input type="checkbox" id="pause-on-hit">
-              <span>Pause rolling when Jackpot (100) is reached</span>
-            </label>
-          </div>
-
-          <!-- DROP CHANCES COLLAPSIBLE / SUMMARY -->
-          <details class="loot-table-details">
-            <summary class="loot-table-summary">View Jackpot Drop Chances</summary>
-            <div class="loot-table-grid">
-              <div class="loot-item-row"><span class="loot-name">Sprint</span><span class="loot-chance chance-common">30%</span></div>
-              <div class="loot-item-row"><span class="loot-name">CodeBreacher</span><span class="loot-chance chance-common">30%</span></div>
-              <div class="loot-item-row"><span class="loot-name">Medkit</span><span class="loot-chance chance-uncommon">20%</span></div>
-              <div class="loot-item-row"><span class="loot-name">Peri</span><span class="loot-chance chance-rare">10%</span></div>
-              <div class="loot-item-row"><span class="loot-name">Dweller Chunk</span><span class="loot-chance chance-epic">5%</span></div>
-              <div class="loot-item-row"><span class="loot-name">Red Remote</span><span class="loot-chance chance-legendary">2.5%</span></div>
-              <div class="loot-item-row"><span class="loot-name">Blue Remote</span><span class="loot-chance chance-legendary">2.5%</span></div>
+          <div class="controls-panel">
+            <div class="slider-group">
+              <div class="slider-header">
+                <label for="speed-slider">Rolling Speed</label>
+                <span id="speed-display" class="time-badge">1.0s</span>
+              </div>
+              <input type="range" id="speed-slider" min="0.1" max="5.0" value="1.0" step="0.1">
+              <div class="slider-hints">
+                <span>0.1s (Fast)</span>
+                <span>1.0s (Default)</span>
+                <span>5.0s (Slow)</span>
+              </div>
             </div>
-          </details>
-        </div>
 
-        <div class="button-row">
-          <button id="roller-start-btn" class="btn btn-primary">Start Roller</button>
-          <button id="roller-stop-btn" class="btn btn-secondary" disabled>Stop</button>
-          <button id="roller-once-btn" class="btn btn-outline">Roll Once</button>
-          <button id="roller-test-btn" class="btn btn-ghost">Test Jackpot</button>
-        </div>
+            <div class="roller-options-row">
+              <label class="checkbox-label" for="pause-on-hit">
+                <input type="checkbox" id="pause-on-hit">
+                <span>Pause rolling when Jackpot (100) is reached</span>
+              </label>
+            </div>
 
-        <div class="roller-stats-row">
-          <div class="stat-box">
-            <span class="stat-label">Total Rolls</span>
-            <span id="total-rolls-count" class="stat-value">0</span>
+            <details class="loot-table-details">
+              <summary class="loot-table-summary">View Jackpot Drop Chances & Sacrifice Rules</summary>
+              <div class="loot-table-grid">
+                <div class="loot-item-row"><span class="loot-name">Sprint</span><span class="loot-chance chance-common">30%</span></div>
+                <div class="loot-item-row"><span class="loot-name">CodeBreacher</span><span class="loot-chance chance-common">30%</span></div>
+                <div class="loot-item-row"><span class="loot-name">Medkit</span><span class="loot-chance chance-uncommon">20%</span></div>
+                <div class="loot-item-row"><span class="loot-name">Peri</span><span class="loot-chance chance-rare">10%</span></div>
+                <div class="loot-item-row"><span class="loot-name">Dweller Chunk</span><span class="loot-chance chance-epic">5%</span></div>
+                <div class="loot-item-row"><span class="loot-name">Red Remote</span><span class="loot-chance chance-legendary">2.5%</span></div>
+                <div class="loot-item-row"><span class="loot-name">Blue Remote</span><span class="loot-chance chance-legendary">2.5%</span></div>
+                <div class="loot-item-row sacrifice-rule-row"><span class="loot-name">Sacrifice Check (1-10)</span><span class="loot-chance chance-sacrifice">10% (Roll 10)</span></div>
+              </div>
+            </details>
           </div>
-          <div class="stat-box">
-            <span class="stat-label">Jackpots</span>
-            <span id="total-hits-count" class="stat-value">0</span>
-          </div>
-          <div class="stat-box">
-            <span class="stat-label">Latest Item</span>
-            <span id="latest-hit-name" class="stat-value">None</span>
-          </div>
-        </div>
 
-        <div class="history-panel">
-          <div class="history-header">
-            <span>Recent Jackpots (TTS Triggered)</span>
-            <button id="clear-roller-history-btn" class="btn-link">Clear</button>
+          <div class="button-row">
+            <button id="roller-start-btn" class="btn btn-primary">Start Roller</button>
+            <button id="roller-stop-btn" class="btn btn-secondary" disabled>Stop</button>
+            <button id="roller-once-btn" class="btn btn-outline">Roll Once</button>
+            <button id="roller-test-btn" class="btn btn-ghost">Test Jackpot</button>
           </div>
-          <ul id="roller-history-list" class="history-list">
-            <li class="history-empty">No jackpots hit yet</li>
-          </ul>
-        </div>
-      </section>
+          <div class="button-row-secondary">
+            <button id="roller-test-sacrifice-btn" class="btn btn-ghost btn-danger-ghost">Test Sacrifice (10)</button>
+          </div>
+
+          <div class="roller-stats-row">
+            <div class="stat-box">
+              <span class="stat-label">Total Rolls</span>
+              <span id="total-rolls-count" class="stat-value">0</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-label">Jackpots</span>
+              <span id="total-hits-count" class="stat-value">0</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-label">Sacrifices</span>
+              <span id="total-sacrifices-count" class="stat-value">0</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- MODULE 3: CUSTOMIZABLE DICE ROLLER -->
+        <section class="card dice-card" aria-label="Dice Roller Section">
+          <h2 class="card-title">Customizable Dice Roller</h2>
+
+          <div class="dice-display-wrap">
+            <div id="dice-status" class="status-label">Ready</div>
+            <div class="dice-result-container">
+              <div id="dice-result-display" class="dice-result-number">--</div>
+            </div>
+            <div id="dice-range-info" class="cycle-info">Range: 1 to 20</div>
+          </div>
+
+          <div class="dice-controls-panel">
+            <div class="dice-inputs-row">
+              <div class="dice-input-group">
+                <label for="dice-min-input">Min Value</label>
+                <input type="number" id="dice-min-input" value="1" step="1">
+              </div>
+              <div class="dice-input-group">
+                <label for="dice-max-input">Max Value</label>
+                <input type="number" id="dice-max-input" value="20" step="1">
+              </div>
+            </div>
+
+            <div class="dice-presets-label">Presets</div>
+            <div class="dice-presets-row">
+              <button class="dice-preset-btn" data-min="1" data-max="4">D4</button>
+              <button class="dice-preset-btn" data-min="1" data-max="6">D6</button>
+              <button class="dice-preset-btn" data-min="1" data-max="8">D8</button>
+              <button class="dice-preset-btn" data-min="1" data-max="10">D10</button>
+              <button class="dice-preset-btn" data-min="1" data-max="12">D12</button>
+              <button class="dice-preset-btn active" data-min="1" data-max="20">D20</button>
+              <button class="dice-preset-btn" data-min="1" data-max="100">D100</button>
+            </div>
+
+            <div class="button-row">
+              <button id="roll-dice-btn" class="btn btn-primary dice-roll-btn">Roll Dice</button>
+              <button id="reset-dice-btn" class="btn btn-outline">Reset</button>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <footer class="footer">
+        <span>Runs in background tabs. Title bar reflects remaining countdown.</span>
+      </footer>
     </div>
 
-    <footer class="footer">
-      <span>Runs in background tabs. Title bar reflects remaining countdown.</span>
-    </footer>
+    <!-- RIGHT ACTIVITY LOGS SIDEBAR -->
+    <aside class="logs-sidebar" aria-label="Activity Logs">
+      <div class="logs-card">
+        <div class="logs-header">
+          <div class="logs-title-wrap">
+            <h2 class="logs-title">Activity Logs</h2>
+            <span id="logs-counter" class="logs-counter">0 events</span>
+          </div>
+          <div class="logs-actions">
+            <button id="clear-all-logs-btn" class="btn-link" title="Clear all logs">Clear</button>
+          </div>
+        </div>
+
+        <div class="logs-filter-bar">
+          <label class="logs-checkbox" for="log-rolls-toggle">
+            <input type="checkbox" id="log-rolls-toggle" checked>
+            <span>Log single rolls</span>
+          </label>
+        </div>
+
+        <div id="logs-stream" class="logs-stream">
+          <div class="log-empty">No activity recorded yet</div>
+        </div>
+      </div>
+    </aside>
   </div>
 
   <audio id="alarm-audio" src="Alarmm.m4a" preload="auto"></audio>
